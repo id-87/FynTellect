@@ -68,6 +68,5 @@ DB design:
 
 
 
-USE CASE DIAGRAM:
 
-![alt text](image.png)
+
