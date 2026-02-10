@@ -65,3 +65,9 @@ DB design:
 
     ML metadata:
         To be added later
+
+
+
+USE CASE DIAGRAM:
+
+![alt text](image.png)
