@@ -1,2 +1,1 @@
-Coming soon
-I have learnt how to train the model
+Here we will be using Random forest classifier and also a regression model.
