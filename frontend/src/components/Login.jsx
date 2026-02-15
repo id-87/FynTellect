@@ -1,17 +1,24 @@
 import React from 'react'
 import { useState } from 'react'
+import axios from 'axios'
 
 const Login = () => {
+  const baseUrl=""
   const [userName,setUserName]=useState("")
   const [password,setPassword]=useState("")
 
-  const handleSubmit=()=>{
+  const handleSubmit=async()=>{
+
+    const resp=await axios.post(baseUrl+'/login',{userName,password})
+    console.log(resp)
+    return resp
+
 
   }
   return (
 
     <div>
-      <form >
+      <form onSubmit={handleSubmit} >
         <label >
           Username
           <input type="text"
@@ -25,6 +32,7 @@ const Login = () => {
           value={password}
           onChange={(e)=>setPassword(e.target.value)} />
         </label>
+        <button type='submit'>Login</button>
       </form>
       
     </div>
