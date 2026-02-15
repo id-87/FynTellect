@@ -55,6 +55,7 @@ const Signup = () => {
           }
            />
         </label>
+        <button type='submit'>Signup</button>
       </form>
       
     </div>
