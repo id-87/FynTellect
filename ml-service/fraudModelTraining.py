@@ -5,18 +5,20 @@ from sklearn.ensemble import RandomForestClassifier
 import joblib
 
 df=pd.read_csv('fraudModelTrain.csv')
-encoders={}
-categorial_collumns=['Payment Method', 'Product Category', 'Customer Location', 'Device Used', 'Shipping Address', 'Billing Address']
-for col in categorial_collumns:
-    encoder=LabelEncoder()
-    df[col]=encoder.fit(df[col])
-    encoders[col]=encoder
+# encoders={}
+# categorial_collumns=['Payment Method', 'Product Category', 'Customer Location', 'Device Used', 'Shipping Address', 'Billing Address']
+# for col in categorial_collumns:
+#     encoder=LabelEncoder()
+#     df[col]=encoder.fit(df[col])
+#     encoders[col]=encoder
 
+# X=df.drop(['Is Fraudulent','Transaction ID','Customer ID','Transaction Date'],axis=1)
 X=df.drop(['Is Fraudulent','Transaction ID','Customer ID','Transaction Date'],axis=1)
+X=pd.get_dummies(X,drop_first=True)
 y=df['Is Fraudulent']
-X_train,y_train,X_test,y_test=train_test_split(X,y,random_state=42,test_size=0.2)
+X_train,X_test,y_train,y_test=train_test_split(X,y,random_state=42,test_size=0.2)
 
 model=RandomForestClassifier()
 model.fit(X_train,y_train)
-accuracy_score=model.score(x_test,y_test)
+accuracy_score=model.score(X_test,y_test)
 print(accuracy_score)
