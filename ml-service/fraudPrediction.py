@@ -11,4 +11,5 @@ def fraudDet(dict):
     # here we need to perform data preprocessing and hten run the model predicitn script and then return the result
     target=model.predict(dict)
     acc=model.accuracy_score
+    return target,acc
 
