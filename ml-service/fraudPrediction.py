@@ -9,30 +9,38 @@ def health():
 
 trained_columns=joblib.load('fraud_columns.pkl')
 
+
+THRESHOLD=0.3
 @app.post('/fraudPred')
 def predict_fraud(dict):
     df=pd.DataFrame([dict])
     df=pd.get_dummies(df,drop_first=True)
-    # for col in trained_columns:
-    #     if col not in df.columns:
-    #         df[col]=0
-    df=df[trained_columns]
-    pred=model.predict(df)[0]
+    
+    df = df.reindex(columns=trained_columns, fill_value=0)
 
-    # here we need to perform data preprocessing and hten run the model predicitn script and then return the result
-    return pred
 
+    fraud_probability = model.predict_proba(df)[0][1]
+    is_fraud = fraud_probability > THRESHOLD
+
+    return {
+        "isFraud": bool(is_fraud),
+        "fraudScore": round(float(fraud_probability), 4),
+        "thresholdUsed": THRESHOLD
+    }
+
+    
 if __name__ == "__main__":
+
     sample_input = {
-        "Amount": 2500,
-        "Payment Method": "Credit Card",
-        "Product Category": "Electronics",
-        "Customer Location": "New York",
-        "Device Used": "Mobile",
-        "Shipping Address": "New York",
-        "Billing Address": "New York"
+        "Transaction Amount": 1500,
+        "Quantity": 1,
+        "Customer Age": 45,
+        "Account Age Days": 300,
+        "Transaction Hour": 2,
+        "Payment Method": "credit card",
+        "Product Category": "electronics",
+        "Device Used": "mobile"
     }
 
     result = predict_fraud(sample_input)
     print(result)
-
