@@ -13,9 +13,9 @@ trained_columns=joblib.load('fraud_columns.pkl')
 def predict_fraud(dict):
     df=pd.DataFrame([dict])
     df=pd.get_dummies(df,drop_first=True)
-    for col in trained_columns:
-        if col not in df.columns:
-            df[col]=0
+    # for col in trained_columns:
+    #     if col not in df.columns:
+    #         df[col]=0
     df=df[trained_columns]
     pred=model.predict(df)[0]
 
