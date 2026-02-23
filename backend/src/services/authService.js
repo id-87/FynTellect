@@ -20,3 +20,13 @@ async function Login(req,res){
     }
     }
 
+
+async function signup(req,res){
+    try{
+        const resp=await User.create(req.body)
+        res.send(resp)
+    }
+    catch(err){
+        res.send(err)
+    }
+}
