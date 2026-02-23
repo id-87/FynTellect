@@ -30,3 +30,7 @@ async function signup(req,res){
         res.send(err)
     }
 }
+module.exports={
+    Login:Login,
+    Signup:Signup
+}
