@@ -1,0 +1,1 @@
+// typescript file for app setup
