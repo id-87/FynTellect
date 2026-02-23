@@ -1,4 +1,4 @@
-const express=require('expresss')
+const express=require('express')
 const User=require('../models/userModel')
 
 async function Login(req,res){
@@ -12,7 +12,7 @@ async function Login(req,res){
             return res.send("User not found")
         }
         if(password=resp.hashedPassword){
-            // assign and send jwt token
+            return res.send("User logged in successfully")
         }
     }
     catch(err){
@@ -21,7 +21,7 @@ async function Login(req,res){
     }
 
 
-async function signup(req,res){
+async function Signup(req,res){
     try{
         const resp=await User.create(req.body)
         res.send(resp)
