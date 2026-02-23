@@ -25,3 +25,6 @@ const model=new mongoose.Schema({
         require:true
     }
 })
+
+const User=mongoose.model("User",model)
+module.exports=User
