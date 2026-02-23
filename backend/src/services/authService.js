@@ -11,11 +11,12 @@ async function Login(req,res){
         if(!resp){
             return res.send("User not found")
         }
-        if(password=resp.hashedPassword){
+        if(password===resp.hashedPassword){
             return res.send("User logged in successfully")
         }
     }
     catch(err){
+        console.log(err)
         return res.send("Login failed due to error:",err)
     }
     }
