@@ -1,5 +1,8 @@
 const express=require('express')
 const User=require('../models/userModel')
+const bcrypt=require('bcrypt')
+const jwt=require("jsonwebtoken")
+const JWT_SECRET=process.env.JWT_SECRET
 
 async function Login(req,res){
     const {username,password}=req.body
@@ -12,6 +15,8 @@ async function Login(req,res){
             return res.send("User not found")
         }
         if(password===resp.hashedPassword){
+            const token=jwt.sign({username},JWT_SECRET)
+            res.cookie("access token",token)
             return res.send("User logged in successfully")
         }
     }
@@ -23,6 +28,7 @@ async function Login(req,res){
 
 
 async function Signup(req,res){
+    
     try{
         const resp=await User.create(req.body)
         res.send(resp)
