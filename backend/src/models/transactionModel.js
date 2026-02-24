@@ -1,6 +1,6 @@
 const mongoose=require('mongoose')
 const model=new mongoose.Schema({
-    _id:{
+    transactionID:{
         type:Number,
         required:true
     },
@@ -26,11 +26,7 @@ const model=new mongoose.Schema({
         },
         // fraudScore(to be added later)
         createdAt:{
-            type:Number,
-            required:true
-        },
-        updatedAt:{
-            type:Number,
-            required:true
+            type:Date,
+            default:Date.now
         }
 })
