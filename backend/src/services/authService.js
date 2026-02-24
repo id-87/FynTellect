@@ -34,9 +34,9 @@ async function Signup(req,res){
         return res.send("Please fill all required fields")
     }
     try{
-        let hashedPassword=await bcrypt.hash(password)
+        let hashedPassword=await bcrypt.hash(password,10)
         const resp=await User.create({name,username,hashedPassword,role,organisation})
-        res.send(resp)
+        res.send("User created successfully")
     }
     catch(err){
         res.send(err)
