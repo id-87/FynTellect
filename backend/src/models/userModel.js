@@ -1,9 +1,9 @@
 const mongoose=require('mongoose')
 const model=new mongoose.Schema({
-    _id:{
-        type:Number,
-        require:true
-    },
+    // _id:{
+    //     type:Number,
+    //     require:true
+    // },
     name:{
         type:String,
         require:true
@@ -19,6 +19,10 @@ const model=new mongoose.Schema({
         require:true
     },
     role:{
+        type:String,
+        require:true
+    },
+    organisation:{
         type:String,
         require:true
     },
