@@ -7,32 +7,28 @@ const model=new mongoose.Schema({
     // },
     name:{
         type:String,
-        require:true
+        required:true
     },
     username:{
         type:String,
-        require:true,
+        required:true,
         unique: true 
         
     },
-    hashedPassword:{
+    password:{
         type:String,
-        require:true
+        required:true
     },
     role:{
         type:String,
         enum:['admin','user'],
-        require:true
+        required:true
     },
     organisation:{
         type:String,
-        require:true
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
+        required:true
     }
-})
+},{ timestamps: true })
 
 const User=mongoose.model("User",model)
 module.exports=User

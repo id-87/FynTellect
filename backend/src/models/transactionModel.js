@@ -26,13 +26,10 @@ const model=new mongoose.Schema({
             type:String,
             enum:['failed','successful','pending'],
             required:true
-        },
-        // fraudScore(to be added later)
-        createdAt:{
-            type:Date,
-            default:Date.now
         }
-})
+        // fraudScore(to be added later)
+        
+},{ timestamps: true })
 
 const Transactions=new mongoose.model("Transactions",model)
 module.exports=Transactions
