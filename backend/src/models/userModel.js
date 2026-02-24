@@ -21,6 +21,7 @@ const model=new mongoose.Schema({
     },
     role:{
         type:String,
+        enum:['admin','user'],
         require:true
     },
     organisation:{

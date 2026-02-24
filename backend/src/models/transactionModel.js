@@ -4,12 +4,13 @@ const model=new mongoose.Schema({
         type:Number,
         required:true
     },
-        userID:{
+        username:{
             type:Number,
             required:true,
         },
         type:{
             type:String,
+            enum:['debit','credit'],
             required:true
         },
         amount:{
@@ -18,10 +19,12 @@ const model=new mongoose.Schema({
         },
         category:{
             type:String,
+            enum:['marketing','development','testing','legal'],
             required:true
         },
         status:{
             type:String,
+            enum:['failed','successful','pending'],
             required:true
         },
         // fraudScore(to be added later)
