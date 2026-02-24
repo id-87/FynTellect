@@ -1,3 +1,4 @@
+const { timeStamp } = require('console')
 const mongoose=require('mongoose')
 const model=new mongoose.Schema({
     // _id:{
@@ -26,9 +27,9 @@ const model=new mongoose.Schema({
         type:String,
         require:true
     },
-    createdAt:{
-        type:Number,
-        require:true
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 })
 

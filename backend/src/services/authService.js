@@ -14,7 +14,8 @@ async function Login(req,res){
         if(!resp){
             return res.send("User not found")
         }
-        if(password===resp.hashedPassword){
+        const match=bcrypt.compare(password,resp.hashedPassword)
+        if(match){
             const token=jwt.sign({username},JWT_SECRET)
             res.cookie("access token",token)
             return res.send("User logged in successfully")
@@ -28,9 +29,13 @@ async function Login(req,res){
 
 
 async function Signup(req,res){
-    
+    const {name,username,password,role,organisation}=req.body
+    if (!name||!username||!password||!role||!organisation){
+        return res.send("Please fill all required fields")
+    }
     try{
-        const resp=await User.create(req.body)
+        let hashedPassword=await bcrypt.hash(password)
+        const resp=await User.create({name,username,hashedPassword,role,organisation})
         res.send(resp)
     }
     catch(err){
