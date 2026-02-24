@@ -1,11 +1,9 @@
 const mongoose=require('mongoose')
 const model=new mongoose.Schema({
-    transactionID:{
-        type:Number,
-        required:true
-    },
-        username:{
-            type:Number,
+    
+        user:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'User',
             required:true,
         },
         type:{
