@@ -30,3 +30,6 @@ const model=new mongoose.Schema({
             default:Date.now
         }
 })
+
+const Transactions=new mongoose.model("Transactions",model)
+module.exports=Transactions
