@@ -74,3 +74,4 @@ Overall structure of the project:
 
 A user uploads a transaction
 The transaction details go through the fraud detection model and the nisFraud and fraud Score is calculated
+The expenditure for a timeline is predicted through a Regression model - Budget Breach
