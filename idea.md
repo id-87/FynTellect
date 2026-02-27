@@ -70,3 +70,6 @@ DB design:
 
 
 
+Overall structure of the project:
+
+A user uploads a transaction
