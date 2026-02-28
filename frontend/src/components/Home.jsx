@@ -4,6 +4,7 @@ const Home = () => {
   return (
     <div>
       Welcome to Fintellect
+      Here only transactions will be shown
       
     </div>
   )
