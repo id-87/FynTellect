@@ -13,7 +13,7 @@ const Login = () => {
   const handleSubmit=async(e)=>{
     e.preventDefault()
 
-    const resp=await axios.post(baseUrl+'/login',{userName,password})
+    const resp=await axios.post(baseUrl+'/auth/login',{userName,password})
     console.log(resp)
     return resp
 

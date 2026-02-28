@@ -8,8 +8,13 @@ const Signup = () => {
   const [password,setPassword]=useState("")
   const [confirmPass,setConfirmPass]=useState("")
   const [role,setRole]=useState("")
+  const [organisation,setOrg]=useState("")
 
-  const handleSubmit=async()=>{
+  const handleSubmit=async(e)=>{
+    e.preventDefault()
+    const resp=await axios.post(baseUrl+'/auth/signup',{name,username,password,role,organisation})
+    console.log(resp)
+    return resp
 
   }
   return (
@@ -44,6 +49,14 @@ const Signup = () => {
           <input type="text"
           value={confirmPass}
           onChange={(e)=>setConfirmPass(e.target.value)
+          }
+           />
+        </label>
+        <label >
+          Organisation
+          <input type="text"
+          value={organisation}
+          onChange={(e)=>setOrg(e.target.value)
           }
            />
         </label>
