@@ -2,12 +2,16 @@ import React from 'react'
 import { useState } from 'react'
 import axios from 'axios'
 
+
+
+const baseUrl=import.meta.env.VITE_Base_Url
 const Login = () => {
-  const baseUrl=""
+  
   const [userName,setUserName]=useState("")
   const [password,setPassword]=useState("")
 
-  const handleSubmit=async()=>{
+  const handleSubmit=async(e)=>{
+    e.preventDefault()
 
     const resp=await axios.post(baseUrl+'/login',{userName,password})
     console.log(resp)
@@ -28,7 +32,7 @@ const Login = () => {
 
         <label >
           Password
-          <input type="text"
+          <input type="password"
           value={password}
           onChange={(e)=>setPassword(e.target.value)} />
         </label>
