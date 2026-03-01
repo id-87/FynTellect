@@ -35,7 +35,7 @@ async function Signup(req,res){
     }
     try{
         let hashedPassword=await bcrypt.hash(password,10)
-        const resp=await User.create({name,username,hashedPassword,role,organisation})
+        const resp=await User.create({name,username,password:hashedPassword,role,organisation})
         res.send("User created successfully")
     }
     catch(err){
