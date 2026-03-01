@@ -8,12 +8,24 @@ import Signup from './components/Signup'
 import Navbar from './components/Navbar'
 import Transactions from './components/Transactions'
 import Home from './components/Home'
+import Configuration from './components/Configuration'
+import Alert from './components/Alert'
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      HI
+      <Router>
+        <Navbar/>
+        <Routes>
+          <Route path='/home' element={<Home/>}/>
+          <Route path='/transactions' element={<Transactions/>}/>
+          <Route path='/login' element={<Login/>}/>
+          <Route path='/signup' element={<Signup/>}/>
+          <Route path='/config' element={<Configuration/>}/>
+          <Route path='/alert' element={<Alert/>}/>
+        </Routes>
+      </Router>
     </>
   )
 }
