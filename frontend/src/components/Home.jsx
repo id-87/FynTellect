@@ -3,8 +3,8 @@ import '../global.css'
 const Home = () => {
   return (
    <div className='container'>
-      Welcome to Fintellect
-      Here only transactions will be shown
+      Welcome to Fintellect!!
+      
       
     </div>
   )
