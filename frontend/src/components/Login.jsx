@@ -7,13 +7,13 @@ import '../global.css'
 const baseUrl=import.meta.env.VITE_BASE_URL
 const Login = () => {
   
-  const [userName,setUserName]=useState("")
+  const [username,setUserName]=useState("")
   const [password,setPassword]=useState("")
 
   const handleSubmit=async(e)=>{
     e.preventDefault()
 
-    const resp=await axios.post(baseUrl+'/auth/login',{userName,password})
+    const resp=await axios.post(baseUrl+'/auth/login',{username,password})
     console.log(resp)
     return resp
 
@@ -26,7 +26,7 @@ const Login = () => {
         <label >
           Username
           <input type="text"
-          value={userName}
+          value={username}
           onChange={(e)=>setUserName(e.target.value)} />
         </label>
 
