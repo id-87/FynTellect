@@ -2,7 +2,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import {Router,Routes,Route} from 'react-router-dom'
+import {BrowserRouter,Routes,Route} from 'react-router-dom'
 import Login from './components/Login'
 import Signup from './components/Signup'
 import Navbar from './components/Navbar'
@@ -15,7 +15,7 @@ function App() {
 
   return (
     <>
-      <Router>
+      <BrowserRouter>
         <Navbar/>
         <Routes>
           <Route path='/home' element={<Home/>}/>
@@ -25,7 +25,7 @@ function App() {
           <Route path='/config' element={<Configuration/>}/>
           <Route path='/alert' element={<Alert/>}/>
         </Routes>
-      </Router>
+      </BrowserRouter>
     </>
   )
 }

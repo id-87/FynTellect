@@ -1,10 +1,11 @@
 import React from 'react'
 import { useState } from 'react'
 const Transactions = () => {
-    const handleSubmit=()=>{
-        const [amount,setAmount]=useState(0)
+    const [amount,setAmount]=useState(0)
         const [type,setType]=useState("")
         const [category,setCategory]=useState("")
+    const handleSubmit=()=>{
+        
     }
   return (
     <div>
