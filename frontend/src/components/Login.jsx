@@ -4,7 +4,7 @@ import axios from 'axios'
 import '../global.css'
 
 
-const baseUrl=import.meta.env.VITE_Base_Url
+const baseUrl=import.meta.env.VITE_BASE_URL
 const Login = () => {
   
   const [userName,setUserName]=useState("")

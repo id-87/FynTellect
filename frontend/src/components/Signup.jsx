@@ -3,6 +3,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import '../global.css'
 const Signup = () => {
+  const baseUrl=import.meta.env.VITE_BASE_URL
   const [name,setName]=useState("")
   const [username,setusername]=useState("")
   const [password,setPassword]=useState("")
@@ -12,6 +13,11 @@ const Signup = () => {
 
   const handleSubmit=async(e)=>{
     e.preventDefault()
+    if(password !== confirmPass){
+      alert("Passwords do not match")
+      return
+    }
+
     const resp=await axios.post(baseUrl+'/auth/signup',{name,username,password,role,organisation})
     console.log(resp)
     return resp
@@ -62,11 +68,10 @@ const Signup = () => {
         </label>
         <label >
           Role
-          <input type="text"
-          value={role}
-          onChange={(e)=>setRole(e.target.value)
-          }
-           />
+          <select value={role} onChange={(e)=>setRole(e.target.value)}>
+            <option value='user'>User</option>
+            <option value='admin'>Admin</option>
+          </select>
         </label>
         <button type='submit'>Signup</button>
       </form>
