@@ -14,11 +14,14 @@ async function Login(req,res){
         if(!resp){
             return res.send("User not found")
         }
-        const match=bcrypt.compare(password,resp.hashedPassword)
+        const match=await bcrypt.compare(password,resp.password)
         if(match){
             const token=jwt.sign({username},JWT_SECRET)
-            res.cookie("access token",token)
+            res.cookie("access_token",token)
             return res.send("User logged in successfully")
+        }
+        else{
+            return res.send("Passwords do not match")
         }
     }
     catch(err){
@@ -42,6 +45,8 @@ async function Signup(req,res){
         res.send(err)
     }
 }
+
+
 module.exports={
     Login:Login,
     Signup:Signup
