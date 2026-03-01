@@ -21,7 +21,7 @@ const Login = () => {
   }
   return (
 
-    <div>
+    <div className='container'>
       <form onSubmit={handleSubmit} >
         <label >
           Username

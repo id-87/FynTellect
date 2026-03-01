@@ -4,7 +4,7 @@ import '../global.css'
 
 const Navbar = () => {
   return (
-    <div>
+    <div className='container'>
       <nav>
       <ul>
         <li><Link to='/home'>Home</Link></li>
