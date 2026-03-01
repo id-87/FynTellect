@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
+import '../global.css'
 const Transactions = () => {
     const [amount,setAmount]=useState(0)
         const [type,setType]=useState("")
@@ -8,7 +9,7 @@ const Transactions = () => {
         
     }
   return (
-    <div>
+    <div className='container'>
         <form onSubmit={handleSubmit}>
             <label>Amount: 
                 <input type="number" />
