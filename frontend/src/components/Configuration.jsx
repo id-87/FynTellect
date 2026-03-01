@@ -7,7 +7,7 @@ const Configuration = () => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        
+        <p>This is the config form</p>
       </form>
     </div>
   )
