@@ -14,8 +14,8 @@ const Login = () => {
     e.preventDefault()
 
     const resp=await axios.post(baseUrl+'/auth/login',{username,password})
-    console.log(resp)
-    return resp
+    console.log(resp.data)
+    localStorage.setItem("token", resp.data.token)
 
 
   }
