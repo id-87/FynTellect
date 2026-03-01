@@ -6,7 +6,8 @@ const authRoutes = require('./routes/authRoutes')
 const transactionRoutes=require('./routes/transactionRoutes')
 const connectDB = require('./config/db.config')
 const PORT = process.env.PORT || 4000
-
+const cors=require('cors')
+app.use(cors())
 
 connectDB()
 
