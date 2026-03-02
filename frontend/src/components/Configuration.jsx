@@ -1,6 +1,8 @@
 import React from 'react'
 import '../global.css'
+
 const Configuration = () => {
+  const token=localStorage.getItem('token')
     const handleSubmit=()=>{
 
     }
