@@ -11,6 +11,23 @@ async function postTransaction(req,res){
     }
 }
 
+
+class TransactionService{
+
+    model
+    postTrans
+
+    
+
+    constructor(model,post){
+        this.model=model
+        this.postTrans=post
+
+    }
+}
+
+const tranSer=new TransactionService(Transactions,postTransaction)
+
 module.exports={
-    postTransaction:postTransaction
+    postTransaction:tranSer.postTrans
 }
