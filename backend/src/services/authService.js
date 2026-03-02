@@ -47,7 +47,25 @@ async function Signup(req,res){
 }
 
 
+
+class AuthService{
+    model
+    login
+    signup
+
+
+    constructor(mod,log,sign){
+        this.model=mod
+        this.login=log
+        this.signup=sign
+
+    }
+
+}
+
+const authSer=new AuthService(User,Login,Signup)
+
 module.exports={
-    Login:Login,
-    Signup:Signup
+    Login:authSer.login,
+    Signup:authSer.signup
 }
