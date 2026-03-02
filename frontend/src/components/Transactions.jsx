@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import '../global.css'
 const Transactions = () => {
+    const token=localStorage.getItem('token')
     const [amount,setAmount]=useState(0)
         const [type,setType]=useState("")
         const [category,setCategory]=useState("")
