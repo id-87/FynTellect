@@ -5,4 +5,8 @@
 async function fraudDetection(req,res){
     const resp=axios.post(fraudDetectionUrl,req.body)
     return resp
+
+    // here not only resp will be returned but two mre major things are to be done:
+    // 1. Database storage for the response.
+    // 2. Alert if isFraud is returned True.
 }
