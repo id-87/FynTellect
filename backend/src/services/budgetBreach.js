@@ -1,3 +1,5 @@
-// Here budfgeet model will be training
- 
-// Here also oops implementation will be there
+async function budgetBreach(req,res){
+    const resp=await axios.post(budgetBreachUrl,req.body)
+    return resp
+
+}
