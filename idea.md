@@ -1,4 +1,4 @@
-Presenting you Fintellect.
+3Presenting you Fintellect.
 
 A finance manager for your company as well as independently for you.
 
@@ -76,3 +76,7 @@ A user uploads a transaction
 The transaction details go through the fraud detection model and the nisFraud and fraud Score is calculated
 The expenditure for a timeline is predicted through a Regression model - Budget Breach
 These things are majorly stored in the DataBase
+
+
+
+commit
