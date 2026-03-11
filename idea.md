@@ -79,7 +79,6 @@ These things are majorly stored in the DataBase
 
 
 
-streak maintain honi chahiye
 
 
 
