@@ -79,7 +79,7 @@ These things are majorly stored in the DataBase
 
 
 
-commit
+streak maintain honi chahiye
 
 
 
