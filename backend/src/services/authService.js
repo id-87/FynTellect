@@ -13,7 +13,7 @@ async function Login(req,res){
     }
         const resp=await User.findOne({username:username})
         if(!resp){
-            return res.send("User not found")
+            return res.status(401).json({message:"User not found"})
         }
         const match=await bcrypt.compare(password,resp.password)
         if(match){
@@ -22,12 +22,12 @@ async function Login(req,res){
             return res.status(200).json({token:token,message:"User loogged in succesfully"})
         }
         else{
-            return res.send("Passwords do not match")
+            return res.status(401).json({message:"Incorrect password"})
         }
     }
     catch(err){
         console.log(err)
-        return res.send("Login failed due to error:",err)
+        return res.status(500).json({mesage:"Internal Server Error"})
     }
     }
 
@@ -35,15 +35,15 @@ async function Login(req,res){
 async function Signup(req,res){
     const {name,username,password,role,organisation}=req.body
     if (!name||!username||!password||!role||!organisation){
-        return res.send("Please fill all required fields")
+        return res.status(400).json({message:"Please fill in all required fields"})
     }
     try{
         let hashedPassword=await bcrypt.hash(password,10)
         const resp=await User.create({name,username,password:hashedPassword,role,organisation})
-        res.send("User created successfully")
+        res.status(200).json({message:"User created sucessfully"})
     }
     catch(err){
-        res.send(err)
+        res.status(500).json({message:"Internal Server Error"})
     }
 }
 
