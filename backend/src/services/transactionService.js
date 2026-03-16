@@ -2,7 +2,7 @@
 const Transactions=require('../models/transactionModel')
 async function postTransaction(req,res){
     try{
-        const resp=await Transactions.create(req.body)
+        const resp=await Transactions.create(req.user)
         return res.send("Transaction uploaded succesfully")
     }
     catch(err){
