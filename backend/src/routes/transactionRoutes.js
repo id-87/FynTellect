@@ -9,11 +9,13 @@ const authMiddleware=require('../middleware/authMiddleware')
 class TransactionRoutes{
     router
     postTransaction
+    mid
 
-    constructor(router,postTransaction){
+    constructor(router,mid,postTransaction){
+        this.mid=mid
         this.router=router
         this.postTransaction=postTransaction
-        this.router.post('/post',this.postTransaction)
+        this.router.post('/post',this.mid,this.postTransaction)
     }
 }
 
