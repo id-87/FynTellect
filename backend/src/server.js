@@ -58,7 +58,9 @@ class Server{
 
 
     startServer(){
-        this.app.listen(this.port,this.cb())
+        this.app.listen(this.port,()=>{
+            this.cb()
+        })
     }
 
     
