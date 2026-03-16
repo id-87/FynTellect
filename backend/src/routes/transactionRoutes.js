@@ -1,6 +1,7 @@
 const express=require('express')
 const {postTransaction}=require('..//services/transactionService')
 const router=express.Router()
+const authMiddleware=require('../middleware/authMiddleware')
 // router.post('/post',postTransaction)
 // module.exports=router
 
@@ -16,5 +17,5 @@ class TransactionRoutes{
     }
 }
 
-const transR=new TransactionRoutes(router,postTransaction)
+const transR=new TransactionRoutes(router,authMiddleware,postTransaction)
 module.exports=transR.router
