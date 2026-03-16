@@ -16,7 +16,7 @@ async function Login(req,res){
         }
         const match=await bcrypt.compare(password,resp.password)
         if(match){
-            const token=jwt.sign({username},JWT_SECRET)
+            const token=jwt.sign({_id:resp._id},JWT_SECRET,{expiresIn:"6h"})
             // res.cookie("access_token",token)
             return res.status(200).json({token:token,message:"User loogged in succesfully"})
         }
