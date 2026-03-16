@@ -1,9 +1,9 @@
 const jwt=require("jsonwebtoken")
-require("dotenv").config
+require("dotenv").config()
 function authMiddleware(req,res,next){
     try{
-        authHeaders=req.headers.authorisation;
-        if(!authHeaders||authHeaders.startsWith("Bearer")){
+        authHeaders=req.headers.authorization;
+        if(!authHeaders||! authHeaders.startsWith("Bearer")){
             return res.status(401).json({
                 success:false,
                 message:"No token found"            })
