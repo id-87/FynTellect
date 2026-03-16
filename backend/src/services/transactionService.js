@@ -7,11 +7,11 @@ async function postTransaction(req,res){
             user:req.user._id,
             type,amount,category,status
         })
-        return res.send("Transaction uploaded succesfully")
+        return res.status(200).json({message:"Transaction uploaded successfully"})
     }
     catch(err){
         console.log(err)
-        return res.send("Some error occured")
+        return res.status(500).json({message:"Some error occured"})
     }
 }
 
