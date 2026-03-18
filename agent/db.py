@@ -13,6 +13,6 @@ trans_col=db["transactions"]
 
 def get_transaction(user_id:str):
     user_id=ObjectId(user_id)
-    transactions=list(trans_col[{"user":user_id}])
+    transactions=list(trans_col.find({"user":user_id}))
     return transactions
 
