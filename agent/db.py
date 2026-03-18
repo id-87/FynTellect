@@ -24,6 +24,7 @@ def get_transaction_by_category(user_id:str,category:str):
 
 
 def get_monthly_transaction(user_id:str,month:int,year:int):
+    user_id=ObjectId(user_id)
     start_date=datetime(year,month,1)
     if(month==12):
         end_date=datetime(year+1,1,1)
