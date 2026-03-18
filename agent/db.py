@@ -16,3 +16,7 @@ def get_transaction(user_id:str):
     transactions=list(trans_col.find({"user":user_id}))
     return transactions
 
+def get_transaction_by_category(user_id:str,category:str):
+    user_id=ObjectId(user_id)
+    transaction=list(trans_col.find({"user":user_id,"category":category}))
+    return transaction
