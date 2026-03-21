@@ -2,6 +2,8 @@ import jwt
 from fastapi import FastAPI
 from pydantic import BaseModel
 import os
+from agent import create_agent
+from agent import create_tool
 JWT_SECRET=os.getenv("JWT_SECRET")
 def verify_token(token):
     decoded=jwt.decode(token,JWT_SECRET,algorithms=["HS256"])
@@ -20,6 +22,12 @@ def health():
 def chat(request,authorisation):
     if not authorisation:
         return {"message":"Forbidden"}
+    token=authorisation.split(" ")[1]
+    decoded=verify_token(token)
+    user_id=decoded.user
+    executor=create_agent(user_id)
+    result=create_tool(user_id)
+    return result
     
 
 

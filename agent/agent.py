@@ -5,7 +5,7 @@ from langchain_core.prompts import ChatPromptTemplate
 import os
 
 
-def creat_tool(user_id):
+def create_tool(user_id):
         
     @tool
     def analyse_spending_tool():
