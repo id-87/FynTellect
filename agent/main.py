@@ -1,5 +1,5 @@
 import jwt
-from fastapi import FastAPI
+from fastapi import FastAPI, Header, HTTPException
 from pydantic import BaseModel
 import os
 from agent import create_agent
@@ -19,15 +19,15 @@ class ChatRequest(BaseModel):
 def health():
     return "Fast api running"
 @app.post('/chat')
-def chat(request,authorisation):
+def chat(request,authorisation:str=Header(None)):
     if not authorisation:
         return {"message":"Forbidden"}
     token=authorisation.split(" ")[1]
     decoded=verify_token(token)
-    user_id=decoded.user
+    user_id=decoded["_id"]
     executor=create_agent(user_id)
-    result=create_tool(user_id)
-    return result
+    result=executor.invoke({"input":request.message})
+    return {"response": result["output"]}
     
 
 
