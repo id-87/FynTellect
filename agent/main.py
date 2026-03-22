@@ -22,8 +22,11 @@ def health():
 def chat(request:ChatRequest,authorisation:str=Header(None)):
     if not authorisation:
         return {"message":"Forbidden"}
-    token=authorisation.split(" ")[1]
-    decoded=verify_token(token)
+    try:
+        token=authorisation.split(" ")[1]
+        decoded=verify_token(token)
+    except:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
     user_id=decoded["_id"]
     executor=create_agent(user_id)
     result=executor.invoke({"input":request.message})
