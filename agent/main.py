@@ -14,7 +14,6 @@ app=FastAPI()
 class ChatRequest(BaseModel):
     message: str
 
-
 @app.get("/health")
 def health():
     return "Fast api running"
