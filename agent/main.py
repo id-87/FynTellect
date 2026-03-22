@@ -19,7 +19,7 @@ class ChatRequest(BaseModel):
 def health():
     return "Fast api running"
 @app.post('/chat')
-def chat(request,authorisation:str=Header(None)):
+def chat(request:ChatRequest,authorisation:str=Header(None)):
     if not authorisation:
         return {"message":"Forbidden"}
     token=authorisation.split(" ")[1]
