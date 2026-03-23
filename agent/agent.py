@@ -65,4 +65,4 @@ def create_agent(user_id):
     
 
     agent=create_react_agent(llm,tools,prompt=system_prompt)
-    return AgentExecutor(agent=agent,tools=tools)
+    return agent
