@@ -5,12 +5,11 @@
 # import os
 
 
+from langchain.tools import tool
 from langchain_groq import ChatGroq
-from langchain.agents import AgentExecutor
 from langchain_core.prompts import ChatPromptTemplate
 from langgraph.prebuilt import create_react_agent
 import os
-
 
 def create_tool(user_id):
         

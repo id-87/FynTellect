@@ -28,8 +28,8 @@ def chat(request:ChatRequest,authorisation:str=Header(None)):
         raise HTTPException(status_code=401, detail="Invalid or expired token")
     user_id=decoded["_id"]
     executor=create_agent(user_id)
-    result=executor.invoke({"input":request.message})
-    return {"response": result["output"]}
+    result = executor.invoke({"messages": [{"role": "user", "content": request.message}]})
+    return {"response": result["messages"][-1].content}
     
 
 
