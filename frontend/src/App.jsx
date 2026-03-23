@@ -9,6 +9,7 @@ import Signup from './components/Signup'
 import Navbar from './components/Navbar'
 import Transactions from './components/Transactions'
 import Home from './components/Home'
+import AgentChat from './components/AgentChat'
 import Configuration from './components/Configuration'
 import Alert from './components/Alert'
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path='/signup' element={<Signup/>}/>
           <Route path='/config' element={<Configuration/>}/>
           <Route path='/alert' element={<Alert/>}/>
+          <Route path='/agent' element={<AgentChat/>}/>
         </Routes>
       </BrowserRouter>
     </>
