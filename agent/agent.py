@@ -62,12 +62,8 @@ def create_agent(user_id):
 
     tools=create_tool(user_id)
 
-    prompt=ChatPromptTemplate.from_messages([
-        ("system","You are FinOS, and AI financial assistant. Help users understand their spending, forecast cashflow, manage budgets and research stocks. Be concise and use Indian Rupees for amounts."),
-        ("human","{input}"),
-        ("placeholder","{agent_scratchpad}")
-    ])
+    system_prompt = "You are FinOS, an AI financial assistant. Help users understand their spending, forecast cashflow, manage budgets and research stocks. Be concise and use Indian Rupees (₹) for amounts."
     
 
-    agent=create_tool_calling_agent(llm,tools,prompt)
+    agent=create_react_agent(llm,tools,prompt=system_prompt)
     return AgentExecutor(agent=agent,tools=tools)
