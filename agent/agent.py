@@ -1,7 +1,14 @@
-from langchain.tools import tool
-from langchain_groq  import ChatGroq
-from langchain.agents import create_tool_calling_agent, AgentExecutor
+# from langchain.tools import tool
+# from langchain_groq  import ChatGroq
+# from langchain.agents import AgentExecutor, create_tool_calling_agent
+# from langchain_core.prompts import ChatPromptTemplate
+# import os
+
+
+from langchain_groq import ChatGroq
+from langchain.agents import AgentExecutor
 from langchain_core.prompts import ChatPromptTemplate
+from langgraph.prebuilt import create_react_agent
 import os
 
 
@@ -53,7 +60,7 @@ def create_agent(user_id):
         api_key=os.getenv("GROQ_API_KEY"),
     )
 
-    tools=creat_tool(user_id)
+    tools=create_tool(user_id)
 
     prompt=ChatPromptTemplate.from_messages([
         ("system","You are FinOS, and AI financial assistant. Help users understand their spending, forecast cashflow, manage budgets and research stocks. Be concise and use Indian Rupees for amounts."),
