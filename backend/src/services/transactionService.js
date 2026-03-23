@@ -15,23 +15,41 @@ async function postTransaction(req,res){
     }
 }
 
+async function getAllTransactions(req,res){
+    try{
+        const resp=await Transactions.find()
+        return res.status(200).json({
+            message:"All transactions fetched successfully",
+            Transactions:resp
+        })
+    }catch(err){
+        return res.status(500).json({
+            status:"Failed",
+            error:err.message
+        })
+    }
+}
+
 
 class TransactionService{
 
     model
     postTrans
+    getall
 
     
 
-    constructor(model,post){
+    constructor(model,post,getall){
         this.model=model
         this.postTrans=post
+        this.getall=getall
 
     }
 }
 
-const tranSer=new TransactionService(Transactions,postTransaction)
+const tranSer=new TransactionService(Transactions,postTransaction,getAllTransactions)
 
 module.exports={
-    postTransaction:tranSer.postTrans
+    postTransaction:tranSer.postTrans,
+    getAllTransactions:tranSer.getall
 }
