@@ -18,7 +18,7 @@ async function postTransaction(req,res){
 
 async function getAllTransactions(req,res){
     try{
-        const resp=await Transactions.find()
+        const resp=await Transactions.find({user:req.user._id})
         return res.status(200).json({
             message:"All transactions fetched successfully",
             Transactions:resp
@@ -34,7 +34,7 @@ async function getAllTransactions(req,res){
 async function getById(req,res){
     try{
         const transaction_id=req.params.id
-        const resp=await Transactions.find({where:{_id:transaction_id}})
+        const resp=await Transactions.findById(transaction_id)
         return res.status(200).json({status:"success",transactions:resp})
     }catch(err){
         return res.status(500).json({
@@ -48,7 +48,7 @@ async function getById(req,res){
 async function deleteById(req,res){
     try{
         const transaction_id=req.params.id
-        const resp=await Transactions.delete({where:{_id:transaction_id}})
+        const resp=await Transactions.findByIdAndDelete(transaction_id)
         return res.status(200).json({status:"Success",message:"Transaction deleted successfully"})
     }catch(err){
         return res.status(500).json({message:"Internal server error",error:err.message})
