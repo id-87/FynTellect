@@ -58,11 +58,11 @@ async function deleteById(req,res){
 async function update(req,res){
     try{
         const resp=await Transactions.findByIdAndUpdate(req.params._id,req.body)
-        if(resp){
-            return res.status(200).json({status:"Success",message:"Transaction updated successfully"})
+        return res.status(200).json({status:"Success",message:"Transaction updated successfully"})
         }
-        }
-    catch(err){}
+    catch(err){
+        return res.status(500).json({message:"Internal server error",error:err.message})
+    }
     
 }
 
