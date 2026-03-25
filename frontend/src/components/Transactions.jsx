@@ -11,6 +11,7 @@ const Transactions = () => {
     }
   return (
     <div className='container'>
+        
         <form onSubmit={handleSubmit}>
             <label>Amount: 
                 <input type="number" />
