@@ -73,15 +73,17 @@ class TransactionService{
     getall
     getById
     deleteById
+    upd
 
     
 
-    constructor(model,post,getall,getById,deleteById){
+    constructor(model,post,getall,getById,deleteById,upd){
         this.model=model
         this.postTrans=post
         this.getall=getall
         this.getById=getById
         this.deleteById=deleteById
+        this.upd=upd
 
     }
 }
@@ -92,5 +94,6 @@ module.exports={
     postTransaction:tranSer.postTrans,
     getAllTransactions:tranSer.getall,
     getById:tranSer.getById,
-    deleteById:tranSer.deleteById
+    deleteById:tranSer.deleteById,
+    update:tranSer.upd
 }
