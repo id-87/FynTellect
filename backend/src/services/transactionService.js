@@ -47,9 +47,11 @@ async function getById(req,res){
 
 async function deleteById(req,res){
     try{
-        const transaction_id=req.params.id
-        const resp=await Transactions.findByIdAndDelete(transaction_id)
-        return res.status(200).json({status:"Success",message:"Transaction deleted successfully"})
+        const transaction = await Transactions.findById(transaction_id)
+        if (!transaction) return res.status(404).json({ message: "Not found" })
+        if (transaction.user.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: "Unauthorized" })
+        }
     }catch(err){
         return res.status(500).json({message:"Internal server error",error:err.message})
        }
@@ -57,7 +59,7 @@ async function deleteById(req,res){
 
 async function update(req,res){
     try{
-        const resp=await Transactions.findByIdAndUpdate(req.params._id,req.body)
+        const resp=await Transactions.findByIdAndUpdate(req.params.id,req.body)
         return res.status(200).json({status:"Success",message:"Transaction updated successfully"})
         }
     catch(err){
