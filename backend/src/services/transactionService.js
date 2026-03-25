@@ -88,7 +88,7 @@ class TransactionService{
     }
 }
 
-const tranSer=new TransactionService(Transactions,postTransaction,getAllTransactions,getById,deleteById)
+const tranSer=new TransactionService(Transactions,postTransaction,getAllTransactions,getById,deleteById,update)
 
 module.exports={
     postTransaction:tranSer.postTrans,
