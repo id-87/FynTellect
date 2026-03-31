@@ -22,8 +22,8 @@ function App() {
         <Routes>
           <Route path='/home' element={<ProtectedRoute><Home/></ProtectedRoute>}/>
           <Route path='/transactions' element={<ProtectedRoute><Transactions/></ProtectedRoute>}/>
-          <Route path='/login' element={<ProtectedRoute><Login/></ProtectedRoute>}/>
-          <Route path='/signup' element={<ProtectedRoute><Signup/></ProtectedRoute>}/>
+          <Route path='/login' element={<Login/>}/>
+          <Route path='/signup' element={<Signup/>}/>
           <Route path='/config' element={<ProtectedRoute><Configuration/></ProtectedRoute>}/>
           <Route path='/alert' element={<ProtectedRoute><Alert/></ProtectedRoute>}/>
           <Route path='/agent' element={<ProtectedRoute><Chat/></ProtectedRoute>}/>

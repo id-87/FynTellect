@@ -37,7 +37,7 @@ function Login() {
     }
 
     return (
-        <div className="auth-container">
+        <div className="auth-page">
             <div className="auth-card">
                 <h2>Welcome to FinOS</h2>
                 <p className="auth-subtitle">Sign in to your account</p>

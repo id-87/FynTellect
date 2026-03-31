@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { transactionAPI } from '../services/api'
+// import '../global.css'
 
 function Transactions() {
     const [transactions, setTransactions] = useState([])
