@@ -9,7 +9,7 @@ import Signup from './components/Signup'
 import Navbar from './components/Navbar'
 import Transactions from './components/Transactions'
 import Home from './components/Home'
-import AgentChat from './components/AgentChat'
+import Chat from './components/Chat'
 import Configuration from './components/Configuration'
 import Alert from './components/Alert'
 function App() {
@@ -26,7 +26,7 @@ function App() {
           <Route path='/signup' element={<ProtectedRoute><Signup/></ProtectedRoute>}/>
           <Route path='/config' element={<ProtectedRoute><Configuration/></ProtectedRoute>}/>
           <Route path='/alert' element={<ProtectedRoute><Alert/></ProtectedRoute>}/>
-          <Route path='/agent' element={<ProtectedRoute><AgentChat/></ProtectedRoute>}/>
+          <Route path='/agent' element={<ProtectedRoute><Chat/></ProtectedRoute>}/>
         </Routes>
       </BrowserRouter>
     </>
