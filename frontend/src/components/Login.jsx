@@ -1,46 +1,87 @@
-import React from 'react'
 import { useState } from 'react'
-import axios from 'axios'
-import '../global.css'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import { authAPI } from '../services/api'
 
+function Login() {
+    const [formData, setFormData] = useState({ username: '', password: '' })
+    const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
+    const { login } = useAuth()
+    const navigate = useNavigate()
 
-const baseUrl=import.meta.env.VITE_BASE_URL
-const Login = () => {
-  
-  const [username,setUserName]=useState("")
-  const [password,setPassword]=useState("")
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value })
+        setError('')  // clear error on typing
+    }
 
-  const handleSubmit=async(e)=>{
-    e.preventDefault()
+    const handleSubmit = async (e) => {
+        e.preventDefault()
 
-    const resp=await axios.post(baseUrl+'/auth/login',{username,password})
-    console.log(resp.data)
-    localStorage.setItem("token", resp.data.token)
+        // Client side validation
+        if (!formData.username || !formData.password) {
+            setError('Please fill all fields')
+            return
+        }
 
+        setLoading(true)
+        try {
+            const res = await authAPI.login(formData)
+            login(res.data.token, { username: formData.username })
+            navigate('/home')
+        } catch (err) {
+            setError(err.response?.data?.message || 'Login failed')
+        } finally {
+            setLoading(false)
+        }
+    }
 
-  }
-  return (
+    return (
+        <div className="auth-container">
+            <div className="auth-card">
+                <h2>Welcome to FinOS</h2>
+                <p className="auth-subtitle">Sign in to your account</p>
 
-    <div className='container'>
-      <form onSubmit={handleSubmit} >
-        <label >
-          Username
-          <input type="text"
-          value={username}
-          onChange={(e)=>setUserName(e.target.value)} />
-        </label>
+                {error && <div className="error-banner">{error}</div>}
 
-        <label >
-          Password
-          <input type="password"
-          value={password}
-          onChange={(e)=>setPassword(e.target.value)} />
-        </label>
-        <button type='submit'>Login</button>
-      </form>
-      
-    </div>
-  )
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Username</label>
+                        <input
+                            type="text"
+                            name="username"
+                            value={formData.username}
+                            onChange={handleChange}
+                            placeholder="Enter username"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            placeholder="Enter password"
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="btn-primary"
+                        disabled={loading}
+                    >
+                        {loading ? 'Signing in...' : 'Sign In'}
+                    </button>
+                </form>
+
+                <p className="auth-link">
+                    Don't have an account? <Link to="/signup">Sign up</Link>
+                </p>
+            </div>
+        </div>
+    )
 }
 
 export default Login
