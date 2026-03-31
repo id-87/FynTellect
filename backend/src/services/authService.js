@@ -19,6 +19,7 @@ async function Login(req,res){
         if(match){
             const token=jwt.sign({_id:resp._id},JWT_SECRET,{expiresIn:"6h"})
             // res.cookie("access_token",token)
+            console.log("User logged in successfully")
             return res.status(200).json({token:token,message:"User loogged in succesfully"})
         }
         else{
@@ -40,7 +41,9 @@ async function Signup(req,res){
     try{
         let hashedPassword=await bcrypt.hash(password,10)
         const resp=await User.create({name,username,password:hashedPassword,role,organisation})
+        console.log("User signed up successfully")
         res.status(200).json({message:"User created sucessfully"})
+
     }
     catch(err){
         res.status(500).json({message:"Internal Server Error"})
