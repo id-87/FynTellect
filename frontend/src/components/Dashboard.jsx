@@ -6,7 +6,6 @@ const Dashboard = () => {
         Average spend per department.
         Max amount spent.
         does that affect your project.
-      
     </div>
   )
 }
