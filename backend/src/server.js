@@ -40,6 +40,12 @@ class Server{
         console.log(`Server is running on ${this.port}`)
     }
 
+    testRoute(){
+        this.app.get('/',(req,res)=>{
+            res.send("Welcome")
+        })
+    }
+
 
     healthRoute(){
         this.app.get('/health',(req,res)=>{
