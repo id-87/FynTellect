@@ -88,6 +88,7 @@ class Server{
 
 const server=new Server(express,authRoutes,transactionRoutes,cors,PORT)
 server.startServer()
+server.testRoute()
 server.healthRoute()
 server.authRoute()
 server.transactionRoute()
