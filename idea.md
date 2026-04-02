@@ -82,3 +82,6 @@ These things are majorly stored in the DataBase
 
 
 
+
+
+backend url render: https://fyntellect.onrender.com/
