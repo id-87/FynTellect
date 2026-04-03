@@ -17,7 +17,15 @@ async function Login(req,res){
         }
         const match=await bcrypt.compare(password,resp.password)
         if(match){
-            const token=jwt.sign({_id:resp._id},JWT_SECRET,{expiresIn:"6h"})
+            const token = jwt.sign(
+                {
+                    _id: resp._id,
+                    role: resp.role,
+                    organisation: resp.organisation
+                },
+                JWT_SECRET,
+                { expiresIn:"6h" }
+            )
             // res.cookie("access_token",token)
             console.log("User logged in successfully")
             return res.status(200).json({token:token,message:"User loogged in succesfully"})

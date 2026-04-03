@@ -18,6 +18,7 @@ async function postTransaction(req,res){
 
 async function getAllTransactions(req,res){
     try{
+        console.log("USER DATA:", req.user)
 
         if(req.user.role === 'admin'){
 
