@@ -24,20 +24,21 @@ class ChatRequest(BaseModel):
 @app.get("/health")
 def health():
     return "Fast api running"
+from agent import run_agent
+
 @app.post('/chat')
-def chat(request:ChatRequest,authorization:str=Header(None)):
+def chat(request: ChatRequest, authorization: str = Header(None)):
     if not authorization:
-        return {"message":"Forbidden"}
+        return {"message": "Forbidden"}
     try:
-        token=authorization.split(" ")[1]
-        decoded=verify_token(token)
+        token = authorization.split(" ")[1]
+        decoded = verify_token(token)
     except:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
-    user_id=decoded["_id"]
-    executor=create_agent(user_id)
-    result = executor.invoke({"messages": [{"role": "user", "content": request.message}]})
-    return {"response": result["messages"][-1].content}
     
+    user_id = decoded["_id"]
+    response = run_agent(user_id, request.message)
+    return {"response": response}
 
 
 
