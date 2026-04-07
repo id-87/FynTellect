@@ -1,68 +1,157 @@
-# from langchain.tools import tool
-# from langchain_groq  import ChatGroq
-# from langchain.agents import AgentExecutor, create_tool_calling_agent
-# from langchain_core.prompts import ChatPromptTemplate
-# import os
-
-
-from langchain.tools import tool
-from langchain_groq import ChatGroq
-from langchain_core.prompts import ChatPromptTemplate
-from langgraph.prebuilt import create_react_agent
 import os
+import json
+import requests
+from dotenv import load_dotenv
+from db import get_transaction, get_monthly_transaction
+from tools.spending import analyse_spending
+from tools.cashflow import forecast_cashflow
+from tools.budget import set_budget, get_budget
+from tools.stocks import search_stock_news
 
-def create_tool(user_id):
-        
-    @tool
-    def analyse_spending_tool():
-        """
-        Analyse spending breakdown by category for a user.
-        Use this when user asks
-        what are my expenses, show my spending breakdown."""
+load_dotenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-        from tools.spending import analyse_spending
-        result=analyse_spending(user_id)
-        return str(result)
-    
+# Define tools for Groq
+TOOLS = [
+    {
+        "type": "function",
+        "function": {
+            "name": "analyse_spending",
+            "description": "Analyse spending breakdown by category. Use when user asks about expenses, spending, how much they spent.",
+            "parameters": {
+                "type": "object",
+                "properties": {},
+                "required": []
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "forecast_cashflow",
+            "description": "Predict next month spending based on past 3 months. Use when user asks about predictions, forecasts, next month budget.",
+            "parameters": {
+                "type": "object",
+                "properties": {},
+                "required": []
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "set_budget",
+            "description": "Set a budget limit for a category.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "category": {"type": "string", "description": "The category name"},
+                    "amount": {"type": "number", "description": "Budget amount in rupees"}
+                },
+                "required": ["category", "amount"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_budget",
+            "description": "Get budget for a category.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "category": {"type": "string"}
+                },
+                "required": ["category"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "search_stock_news",
+            "description": "Search stock news. Use when user asks about stocks, markets, investments.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "stock_name": {"type": "string"},
+                    "market": {"type": "string", "default": "global"}
+                },
+                "required": ["stock_name"]
+            }
+        }
+    }
+]
 
+def call_tool(name, args, user_id):
+    if name == "analyse_spending":
+        return analyse_spending(user_id)
+    elif name == "forecast_cashflow":
+        return forecast_cashflow(user_id)
+    elif name == "set_budget":
+        return set_budget(user_id, args["category"], args["amount"])
+    elif name == "get_budget":
+        return get_budget(user_id, args["category"])
+    elif name == "search_stock_news":
+        return search_stock_news(args["stock_name"], args.get("market", "global"))
+    return "Tool not found"
 
-    @tool
-    def forecast_cashflow_tool():
-        """
-        Predict next month cashflow based on past three months transactions.
-        Use this when user asked for predicting next month budget"""
+def run_agent(user_id: str, message: str) -> str:
+    messages = [
+        {
+            "role": "system",
+            "content": "You are FinOS, an AI financial assistant for Indian businesses. Help users understand spending, forecast cashflow, manage budgets and research stocks. Use rupees (₹). Be concise and helpful."
+        },
+        {"role": "user", "content": message}
+    ]
 
-        from tools.cashflow import forecast_cashflow
-        result=forecast_cashflow(user_id)
-        return str(result)
-    
-
-    @tool
-    def set_budget_tool(category,amount):
-        """You have to set budget of the user for a specified category"""
-        from tools.budget import set_budget
-        result=set_budget(user_id,category,amount)
-        return str(result)
-
-    @tool
-    def search_stock_news_tool(stock_name,market):
-        """Search and return stock news for the given stock in the given market"""
-        from tools.stocks import search_stock_news
-        result=search_stock_news(stock_name,market)
-        return str(result)
-    return [analyse_spending_tool, forecast_cashflow_tool, set_budget_tool, search_stock_news_tool]
-
-
-def create_agent(user_id):
-    llm=ChatGroq(
-        model='llama-3.3-70b-versatile',
-        api_key=os.getenv("GROQ_API_KEY"),
+    # First call — let Groq decide which tool to use
+    response = requests.post(
+        "https://api.groq.com/openai/v1/chat/completions",
+        headers={
+            "Authorization": f"Bearer {GROQ_API_KEY}",
+            "Content-Type": "application/json"
+        },
+        json={
+            "model": "llama-3.3-70b-versatile",
+            "messages": messages,
+            "tools": TOOLS,
+            "tool_choice": "auto"
+        }
     )
 
-    tools=create_tool(user_id)
+    result = response.json()
+    choice = result["choices"][0]["message"]
 
-    system_prompt = "You are FinOS, an AI financial assistant. Help users understand their spending, forecast cashflow, manage budgets and research stocks. Be concise and use Indian Rupees (₹) for amounts."
-    
+    # If no tool call — return direct response
+    if not choice.get("tool_calls"):
+        return choice["content"]
 
-    agent=create_react_agent(llm,tools,prompt=system_prompt)
-    return agent
+    # Execute tool calls
+    messages.append(choice)
+
+    for tool_call in choice["tool_calls"]:
+        tool_name = tool_call["function"]["name"]
+        tool_args = json.loads(tool_call["function"]["arguments"] or "{}")
+        tool_result = call_tool(tool_name, tool_args, user_id)
+
+        messages.append({
+            "role": "tool",
+            "tool_call_id": tool_call["id"],
+            "content": str(tool_result)
+        })
+
+    # Second call — generate final answer with tool results
+    final_response = requests.post(
+        "https://api.groq.com/openai/v1/chat/completions",
+        headers={
+            "Authorization": f"Bearer {GROQ_API_KEY}",
+            "Content-Type": "application/json"
+        },
+        json={
+            "model": "llama-3.3-70b-versatile",
+            "messages": messages
+        }
+    )
+
+    return final_response.json()["choices"][0]["message"]["content"]
