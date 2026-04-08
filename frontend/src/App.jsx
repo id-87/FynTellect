@@ -10,6 +10,7 @@ import Navbar from './components/Navbar'
 import Transactions from './components/Transactions'
 import Home from './components/Home'
 import Chat from './components/Chat'
+import AccountAggregator from './components/AccountAggregator'
 import Configuration from './components/Configuration'
 import Alert from './components/Alert'
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path='/config' element={<ProtectedRoute><Configuration/></ProtectedRoute>}/>
           <Route path='/alert' element={<ProtectedRoute><Alert/></ProtectedRoute>}/>
           <Route path='/agent' element={<ProtectedRoute><Chat/></ProtectedRoute>}/>
+          <Route path='/aa' element={<ProtectedRoute><AccountAggregator/></ProtectedRoute>}/>
         </Routes>
       </BrowserRouter>
     </>
