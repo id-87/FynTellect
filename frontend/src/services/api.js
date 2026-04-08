@@ -16,6 +16,9 @@ const attachToken = (config) => {
     return config
 }
 
+
+
+
 // Response interceptor — handles 401 globally
 const handleError = (error) => {
     if (error.response?.status === 401) {
@@ -50,4 +53,12 @@ export const transactionAPI = {
 // Agent API
 export const agentAPI = {
     chat: (message) => agentApi.post('/chat', { message })
+}
+
+
+export const aaAPI = {
+    createConsent: (mobileNumber) => api.post('/aa/consent', { mobileNumber }),
+    getConsentStatus: (consentId) => api.get(`/aa/consent/${consentId}`),
+    createDataSession: (consentId) => api.post(`/aa/data-session/${consentId}`),
+    fetchData: (sessionId) => api.get(`/aa/data/${sessionId}`)
 }
