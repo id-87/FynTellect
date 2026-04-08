@@ -4,6 +4,7 @@ const app=express()
 // require('dotenv').config()
 const authRoutes = require('./routes/authRoutes')
 const transactionRoutes=require('./routes/transactionRoutes')
+const aaRoutes=require('./routes/aaRoutes')
 const connectDB = require('./config/db.config')
 
 
@@ -35,6 +36,7 @@ class Server{
     transactionRoutes
     port
     cors
+    aaRoutes
 
     cb(){
         console.log(`Server is running on ${this.port}`)
@@ -61,6 +63,9 @@ class Server{
     transactionRoute(){
         this.app.use('/transaction',this.transactionRoutes)
     }
+    aaRoute(){
+        this.app.use('/aa',this.aaRoutes)
+    }
 
 
     startServer(){
@@ -70,12 +75,13 @@ class Server{
     }
 
     
-    constructor(exp,authR,transR,cors,port){
+    constructor(exp,authR,transR,cors,port,aaRoutes){
         require('dotenv').config()
         connectDB()
 
         this.express=exp
         this.cors=cors
+        this.aaRoutes=aaRoutes
         this.app=this.express()
         this.app.use(this.express.json())
         this.port=port
@@ -86,9 +92,10 @@ class Server{
 
 }
 
-const server=new Server(express,authRoutes,transactionRoutes,cors,PORT)
+const server=new Server(express,authRoutes,transactionRoutes,cors,PORT,aaRoutes)
 server.startServer()
 server.testRoute()
 server.healthRoute()
 server.authRoute()
 server.transactionRoute()
+server.aaRoute()
