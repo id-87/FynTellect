@@ -155,3 +155,7 @@ def run_agent(user_id: str, message: str) -> str:
     )
 
     return final_response.json()["choices"][0]["message"]["content"]
+
+
+def create_agent():
+    return run_agent

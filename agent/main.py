@@ -33,11 +33,12 @@ def chat(request: ChatRequest, authorization: str = Header(None)):
     try:
         token = authorization.split(" ")[1]
         decoded = verify_token(token)
+        user_id = decoded["_id"]
+        response = run_agent(user_id, request.message)
     except:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
     
-    user_id = decoded["_id"]
-    response = run_agent(user_id, request.message)
+    
     return {"response": response}
 
 
