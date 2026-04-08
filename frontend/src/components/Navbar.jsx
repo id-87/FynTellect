@@ -25,6 +25,7 @@ const Navbar = () => {
           <li><Link to="/home" className={isActive('/home')}>Dashboard</Link></li>
           <li><Link to="/transactions" className={isActive('/transactions')}>Transactions</Link></li>
           <li><Link to="/agent" className={isActive('/agent')}>AI Agent</Link></li>
+          <li><Link to="/aa" className={isActive('/aa')}>Bank Connect</Link></li>
           <li><Link to="/config" className={isActive('/config')}>Settings</Link></li>
         </ul>
       )}
