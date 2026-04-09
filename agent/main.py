@@ -1,66 +1,45 @@
+import os
 import jwt
 from fastapi import FastAPI, Header, HTTPException
-from fastapi import Depends
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-
-
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import os
-from agent import create_agent
 from dotenv import load_dotenv
+from agent import run_agent
 
 load_dotenv()
 
-security = HTTPBearer()
-# from agent import create_tool
-JWT_SECRET=os.getenv("JWT_SECRET")
-print("JWT SECRET LOADED:", JWT_SECRET) 
+JWT_SECRET = os.getenv("JWT_SECRET")
+app = FastAPI(title="FinOS Agent")
 
-def verify_token(token):
-    decoded=jwt.decode(token,JWT_SECRET,algorithms=["HS256"])
-    return decoded
-
-app=FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class ChatRequest(BaseModel):
     message: str
 
+def verify_token(token: str):
+    return jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+
 @app.get("/health")
 def health():
-    return "Fast api running"
-from agent import run_agent
+    return {"status": "FinOS agent running"}
 
-
-
-
-# @app.post('/chat')
-# def chat(request: ChatRequest, authorization: str = Header(None)):
-#     if not authorization:
-#         return {"message": "Forbidden"}
-#     try:
-#         print("token start")
-#         token = authorization.split(" ")[1]
-#         decoded = verify_token(token)
-#         user_id = decoded["_id"]
-#         # return user_id
-#         response = run_agent(user_id, request.message)
-#     except:
-#         print(Exception)
-#         raise HTTPException(status_code=401, detail="Invalid or expired token")
-    
-    
-    
-#     return {"response": response}
-
-
-
-
-@app.post('/chat')
-def chat(request: ChatRequest, creds: HTTPAuthorizationCredentials = Depends(security)):
+@app.post("/chat")
+def chat(request: ChatRequest, authorization: str = Header(None)):
+    if not authorization:
+        raise HTTPException(status_code=401, detail="No token provided")
     try:
-        token = creds.credentials
-        decoded = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-        response = run_agent(decoded["_id"], request.message)
-        return {"response": response}
+        token = authorization.split(" ")[1]
+        decoded = verify_token(token)
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
+    user_id = decoded["_id"]
+    try:
+        response = run_agent(user_id, request.message)
+        return {"response": response}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
