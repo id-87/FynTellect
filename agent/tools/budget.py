@@ -8,7 +8,7 @@ load_dotenv()
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
 
 pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
-index = pc.Index("finos-budgets")
+index = pc.Index("fyntellect")
 
 def set_budget(user_id: str, category: str, amount: float) -> dict:
     text = f"{category} budget for user {user_id}"

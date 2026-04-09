@@ -24,6 +24,10 @@ class ChatRequest(BaseModel):
 def verify_token(token: str):
     return jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
 
+@app.get('/')
+def root():
+    return "Welcome to fyntellect"
+
 @app.get("/health")
 def health():
     return {"status": "FinOS agent running"}
