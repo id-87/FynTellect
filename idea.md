@@ -86,3 +86,4 @@ These things are majorly stored in the DataBase
 
 backend url render: https://fyntellect.onrender.com/
 frontend on vercel:https://fin-tellect-six.vercel.app/
+agent on render: https://fynagent.onrender.com
