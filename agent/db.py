@@ -32,3 +32,4 @@ def get_monthly_transaction(user_id:str,month:int,year:int):
         end_date=datetime(year,month+1,1)
     transactions=list(trans_col.find({"user":user_id,"createdAt":{"$gte":start_date,"$lt":end_date}}))
     return transactions
+
