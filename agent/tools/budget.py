@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
-
 pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
 index = pc.Index("fyn-budgets")
 
@@ -19,7 +18,7 @@ def set_budget(user_id: str, category: str, amount: float) -> dict:
         "metadata": {
             "user_id": user_id,
             "category": category,
-            "amount": amount
+            "amount": float(amount)
         }
     }])
     return {"message": f"Budget set: ₹{amount} for {category}"}
@@ -37,3 +36,16 @@ def get_budget(user_id: str, category: str) -> dict:
         meta = results.matches[0].metadata
         return {"category": meta["category"], "amount": meta["amount"]}
     return {"message": f"No budget set for {category}"}
+
+def get_all_budgets(user_id: str) -> list:
+    categories = ["marketing", "development", "testing", "legal"]
+    budgets = []
+    for cat in categories:
+        result = get_budget(user_id, cat)
+        if "amount" in result:
+            budgets.append(result)
+    return budgets
+
+def delete_budget(user_id: str, category: str) -> dict:
+    index.delete(ids=[f"{user_id}_{category}"])
+    return {"message": f"Budget deleted for {category}"}
