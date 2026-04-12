@@ -56,6 +56,14 @@ export const agentAPI = {
 }
 
 
+
+export const budgetAPI = {
+    getAll: () => agentApi.get('/budget'),
+    set: (data) => agentApi.post('/budget', data),
+    delete: (category) => agentApi.delete(`/budget/${category}`)
+}
+
+
 export const aaAPI = {
     createConsent: (mobileNumber) => api.post('/aa/consent', { mobileNumber }),
     getConsentStatus: (consentId) => api.get(`/aa/consent/${consentId}`),
