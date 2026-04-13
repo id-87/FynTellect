@@ -7,6 +7,7 @@ from tools.cashflow import forecast_cashflow
 from tools.budget import set_budget, get_budget, get_all_budgets
 from tools.stocks import search_stock_news
 from db import get_transaction
+from bson import ObjectId
 
 load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
@@ -36,7 +37,10 @@ TOOLS = [
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "category": {"type": "string", "enum": ["marketing", "development", "testing", "legal"]},
+                    "category": {
+                        "type": "string",
+                        "enum": ["marketing", "development", "testing", "legal"]
+                    },
                     "amount": {"type": "number"}
                 },
                 "required": ["category", "amount"]
@@ -61,7 +65,7 @@ TOOLS = [
         "type": "function",
         "function": {
             "name": "get_all_budgets",
-            "description": "Get all budget limits set by the user across all categories.",
+            "description": "Get all budget limits set by the user.",
             "parameters": {"type": "object", "properties": {}, "required": []}
         }
     },
@@ -94,45 +98,93 @@ def call_tool(name: str, args: dict, user_id: str):
     elif name == "get_all_budgets":
         return get_all_budgets(user_id)
     elif name == "search_stock_news":
-        return search_stock_news(args["stock_name"], args.get("market", "global"))
+        return search_stock_news(
+            args["stock_name"],
+            args.get("market", "global")
+        )
     return "Tool not found"
 
 def build_context(user_id: str) -> str:
-    """Build rich context about the user for the system prompt"""
+    """Build rich financial context for the system prompt"""
     try:
+        # Fix ObjectId conversion
         transactions = get_transaction(user_id)
-        total = sum(t["amount"] for t in transactions)
-        cats = {}
-        for t in transactions:
-            cats[t["category"]] = cats.get(t["category"], 0) + t["amount"]
-        
+
+        if not transactions:
+            txn_context = "No transactions found for this user."
+        else:
+            total = sum(t.get("amount", 0) for t in transactions)
+            cats = {}
+            statuses = {}
+            types = {}
+
+            for t in transactions:
+                # Category breakdown
+                cat = t.get("category", "unknown")
+                cats[cat] = cats.get(cat, 0) + t.get("amount", 0)
+
+                # Status breakdown
+                status = t.get("status", "unknown")
+                statuses[status] = statuses.get(status, 0) + 1
+
+                # Type breakdown
+                typ = t.get("type", "unknown")
+                types[typ] = types.get(typ, 0) + t.get("amount", 0)
+
+            cat_str = " | ".join([f"{k}: ₹{v:,.0f}" for k, v in cats.items()])
+            status_str = " | ".join([f"{k}: {v}" for k, v in statuses.items()])
+            type_str = " | ".join([f"{k}: ₹{v:,.0f}" for k, v in types.items()])
+
+            txn_context = f"""
+- Total transactions: {len(transactions)}
+- Total amount: ₹{total:,.0f}
+- By category: {cat_str}
+- By status: {status_str}
+- By type: {type_str}"""
+
+        # Budget context
         budgets = get_all_budgets(user_id)
-        budget_str = ", ".join([f"{b['category']}: ₹{b['amount']}" for b in budgets]) if budgets else "No budgets set"
-        cat_str = ", ".join([f"{k}: ₹{v}" for k, v in cats.items()]) if cats else "No transactions"
+        if budgets:
+            budget_str = " | ".join([
+                f"{b['category']}: ₹{b['amount']:,.0f}" for b in budgets
+            ])
+        else:
+            budget_str = "No budgets configured yet"
 
         return f"""
-User Financial Context:
-- Total transactions: {len(transactions)}
-- Total spent: ₹{total:,.0f}
-- Spending by category: {cat_str}
-- Configured budgets: {budget_str}
-"""
-    except Exception as e:
-        return "Context unavailable"
+=== USER FINANCIAL CONTEXT ===
+TRANSACTIONS:
+{txn_context}
 
-def run_agent(user_id: str, message: str) -> str:
+CONFIGURED BUDGETS:
+{budget_str}
+
+Use this context to give personalized, accurate answers.
+If user asks about their spending, use the transaction data above.
+If user asks about budgets vs actual, compare the two sections above.
+=============================="""
+
+    except Exception as e:
+        print(f"Context build error: {e}")
+        return "Financial context temporarily unavailable."
+
+def run_agent(user_id: str, message: str, history: list = []) -> str:
     context = build_context(user_id)
 
-    messages = [
-        {
-            "role": "system",
-            "content": (
-                "You are Fyntellect, an AI financial assistant for Indian businesses. "
-                "Help users understand spending, forecast cashflow, manage budgets and research stocks. "
-                "Always use ₹ for amounts. Be concise, specific with numbers.\n\n"
-                + context
-            )
-        },
+    # System message with full context
+    system_message = {
+        "role": "system",
+        "content": (
+            "You are Fyntellect, an AI financial assistant for Indian businesses. "
+            "Help users understand spending, forecast cashflow, manage budgets and research stocks. "
+            "Always use ₹ for amounts. Be concise, specific with numbers. "
+            "You remember the conversation history and refer back to it when relevant.\n\n"
+            + context
+        )
+    }
+
+    # Build messages: system + history + current message
+    messages = [system_message] + history + [
         {"role": "user", "content": message}
     ]
 
@@ -141,6 +193,7 @@ def run_agent(user_id: str, message: str) -> str:
         "Content-Type": "application/json"
     }
 
+    # First call
     resp = requests.post(
         "https://api.groq.com/openai/v1/chat/completions",
         headers=headers,
@@ -156,9 +209,11 @@ def run_agent(user_id: str, message: str) -> str:
     result = resp.json()
     choice = result["choices"][0]["message"]
 
+    # No tool needed
     if not choice.get("tool_calls"):
         return choice["content"]
 
+    # Execute tools
     messages.append(choice)
     for tool_call in choice["tool_calls"]:
         name = tool_call["function"]["name"]
@@ -170,6 +225,7 @@ def run_agent(user_id: str, message: str) -> str:
             "content": str(tool_result)
         })
 
+    # Final answer
     final = requests.post(
         "https://api.groq.com/openai/v1/chat/completions",
         headers=headers,
