@@ -7,29 +7,47 @@ from datetime import datetime
 load_dotenv()
 
 client = MongoClient(os.getenv("MONGODB_URI"))
+db = client['Fin']
+trans_col = db["transactions"]
 
-db=client['Fin']
+def get_transaction(user_id: str) -> list:
+    try:
+        uid = ObjectId(user_id)
+        transactions = list(trans_col.find(
+            {"user": uid, "status": "successful"},
+            {"_id": 0, "user": 0, "__v": 0}  # exclude ObjectId fields
+        ))
+        return transactions
+    except Exception as e:
+        print(f"get_transaction error: {e}")
+        return []
 
-trans_col=db["transactions"]
+def get_transaction_by_category(user_id: str, category: str) -> list:
+    try:
+        uid = ObjectId(user_id)
+        return list(trans_col.find(
+            {"user": uid, "status": "successful", "category": category},
+            {"_id": 0, "user": 0, "__v": 0}
+        ))
+    except Exception as e:
+        print(f"get_transaction_by_category error: {e}")
+        return []
 
-def get_transaction(user_id:str):
-    user_id=ObjectId(user_id)
-    transactions=list(trans_col.find({"user":user_id}))
-    return transactions
-
-def get_transaction_by_category(user_id:str,category:str):
-    user_id=ObjectId(user_id)
-    transaction=list(trans_col.find({"user":user_id,"category":category}))
-    return transaction
-
-
-def get_monthly_transaction(user_id:str,month:int,year:int):
-    user_id=ObjectId(user_id)
-    start_date=datetime(year,month,1)
-    if(month==12):
-        end_date=datetime(year+1,1,1)
-    else:
-        end_date=datetime(year,month+1,1)
-    transactions=list(trans_col.find({"user":user_id,"createdAt":{"$gte":start_date,"$lt":end_date}}))
-    return transactions
-
+def get_monthly_transaction(user_id: str, month: int, year: int) -> list:
+    try:
+        uid = ObjectId(user_id)
+        start = datetime(year, month, 1)
+        if month == 12:
+            end = datetime(year + 1, 1, 1)
+        else:
+            end = datetime(year, month + 1, 1)
+        return list(trans_col.find(
+            {
+                "user": uid,
+                "createdAt": {"$gte": start, "$lt": end}
+            },
+            {"_id": 0, "user": 0, "__v": 0}
+        ))
+    except Exception as e:
+        print(f"get_monthly_transaction error: {e}")
+        return []
