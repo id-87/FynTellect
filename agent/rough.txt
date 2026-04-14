@@ -1,0 +1,24 @@
+cd agent
+source venv/bin/activate
+python3 -c "
+from pinecone import Pinecone, ServerlessSpec
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+pc = Pinecone(api_key=os.getenv('PINECONE_API_KEY'))
+
+# Create memory index if it doesn't exist
+existing = [i.name for i in pc.list_indexes()]
+if 'fyn-memory' not in existing:
+    pc.create_index(
+        name='finos-memory',
+        dimension=384,
+        metric='cosine',
+        spec=ServerlessSpec(cloud='aws', region='us-east-1')
+    )
+    print('Created fyn-memory index')
+else:
+    print('Index already exists')
+print('Done')
+"
