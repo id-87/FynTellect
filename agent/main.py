@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from agent import run_agent
 from tools.budget import set_budget, get_all_budgets, delete_budget
+from tools.memory import delete_budget, get_all_budgets, set_budget, clear_chat_history
 from collections import defaultdict
 
 load_dotenv()
@@ -99,4 +100,10 @@ def list_budgets(authorization: str = Header(None)):
 def remove_budget(category: str, authorization: str = Header(None)):
     user_id = get_user_id(authorization)
     result = delete_budget(user_id, category)
+    return result
+
+@app.delete("/chat/history")
+def clear_history(authorization: str = Header(None)):
+    user_id = get_user_id(authorization)
+    result = clear_chat_history(user_id)
     return result
