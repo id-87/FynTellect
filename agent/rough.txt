@@ -1,0 +1,1 @@
+Right now we need to understand well how the agent interacts with ppinecone indexing and mongo db database.
