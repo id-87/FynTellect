@@ -43,6 +43,10 @@ def get_user_id(authorization: str) -> str:
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid token")
 
+
+@app.get('/')
+def root():
+    return "Fast api running"
 @app.get("/health")
 def health():
     return {"status": "Fyntellect running"}
