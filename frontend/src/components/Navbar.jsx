@@ -16,7 +16,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <Link to="/home" className="navbar-brand">
-        <span className="navbar-brand-name">FinOS</span>
+        <span className="navbar-brand-name">Fyntellect</span>
         <span className="navbar-brand-sub">AI FINANCIAL OS</span>
       </Link>
 
