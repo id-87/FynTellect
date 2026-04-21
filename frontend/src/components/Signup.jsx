@@ -47,8 +47,8 @@ function Signup() {
         <div className="auth-page">
             <div className="auth-card">
                 <div className="auth-logo">
-                    <div className="auth-logo-name">FinOS</div>
-                    <div className="auth-logo-sub">AI FINANCIAL OS</div>
+                    <div className="auth-logo-name">Fyntellect</div>
+                    <div className="auth-logo-sub">AI FINANCIAL ECOSYSTEM</div>
                 </div>
                 <h2>Create account</h2>
                 <p className="auth-subtitle">Start managing your finances</p>
