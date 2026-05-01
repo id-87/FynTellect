@@ -1,32 +1,30 @@
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 
 def search_stock_news(stock_name: str, market: str = "global") -> dict:
     try:
         if market == "india":
-            query = f"{stock_name} NSE BSE stock news India"
+            query = f"{stock_name} stock NSE BSE India"
         else:
-            query = f"{stock_name} stock news"
+            query = f"{stock_name} stock price news"
 
-        results = []
         with DDGS() as ddgs:
-            for r in ddgs.news(query, max_results=5):
-                results.append({
-                    "title": r.get("title", ""),
-                    "body": r.get("body", ""),
-                    "source": r.get("source", ""),
-                    "date": r.get("date", "")
-                })
+            results = list(ddgs.news(query, max_results=5))
+
+        if not results:
+            # Fallback — try text search
+            with DDGS() as ddgs:
+                results = [r for r in ddgs.text(query, max_results=5)]
+                return {
+                    "stock": stock_name,
+                    "market": market,
+                    "news": [{"title": r.get("title",""), "body": r.get("body","")} for r in results]
+                }
 
         return {
             "stock": stock_name,
             "market": market,
-            "news": results
+            "news": [{"title": r.get("title",""), "body": r.get("body",""), "date": r.get("date","")} for r in results]
         }
 
     except Exception as e:
-        return {
-            "stock": stock_name,
-            "market": market,
-            "news": [],
-            "error": str(e)
-        }
+        return {"stock": stock_name, "market": market, "news": [], "error": str(e)}
